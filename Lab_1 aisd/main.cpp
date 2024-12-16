@@ -133,3 +133,89 @@ public:
 template<typename T>
 const double Polyline<T>::epsilon = 1e-5;
 
+// Функция для создания ломаной в виде буквы "Д"
+Polyline<double> createDShape() {
+    Polyline<double> dShape(6);
+    dShape[0] = Point<double>(0, 0);
+    dShape[1] = Point<double>(0, 3);
+    dShape[2] = Point<double>(2, 3);
+    dShape[3] = Point<double>(2, 1.5);
+    dShape[4] = Point<double>(0, 1.5);
+    dShape[5] = Point<double>(0, 0); // Замыкание ломаной
+    return dShape;
+}
+Polyline<double> createIsoscelesTriangle(double angle, double sideLength) {
+    if (angle <= 0 || angle >= 180) {
+        throw std::invalid_argument("Angle must be between 0 and PI");
+    }
+    if (sideLength <= 0) {
+        throw std::invalid_argument("Side length must be positive");
+    }
+
+    Polyline<double> triangle(3);
+
+    // Базовая точка
+    triangle[0] = Point<double>(0, 0);
+    // Вторая точка
+    triangle[1].x = sideLength * cos(angle / 2.0);
+    triangle[1].y = sideLength * sin(angle / 2.0);
+    // Третья точка
+    triangle[2].x = 2.0 * sideLength * cos(angle / 2.0);
+    triangle[2].y = 0.0;
+
+
+    return triangle;
+}
+int main() {
+    setlocale(LC_ALL, "");
+    try {
+        // Создаем ломаную
+        Polyline<double> Iso_Triangle = createIsoscelesTriangle(40,3);
+        std::cout << "Длина ломанной: " << Iso_Triangle.length() << std::endl;
+
+        // Пример использования операторов
+        Point<double> newPoint(1, 1);
+        Polyline<double> extendedShape = Iso_Triangle + newPoint;
+        std::cout << "Длина ломанной с еще одной точкой: " << extendedShape.length() << std::endl;
+
+        // Проверка на равенство
+        if (Iso_Triangle != extendedShape) {
+            std::cout << "Ломанные разные." << std::endl;
+        }
+
+        // Демонстрация оператора сложения ломаной и точки
+        Polyline<double> anotherExtendedShape = newPoint + Iso_Triangle;
+        std::cout << "Длина ломанной, созданной добавлением точки в начале: " << anotherExtendedShape.length() << std::endl;
+
+        // Использование оператора []
+        std::cout << "Координаты первой точки ломаной: ("
+            << Iso_Triangle[0].x << ", " << Iso_Triangle[0].y << ")" << std::endl;
+
+        // Изменение координат точки в ломаной
+        Iso_Triangle[0] = Point<double>(-1, -1);
+        std::cout << "После изменения, первая точка ломаной: ("
+            << Iso_Triangle[0].x << ", " << Iso_Triangle[0].y << ")" << std::endl;
+
+        // Проверка на равенство после изменения
+        if (Iso_Triangle == extendedShape) {
+            std::cout << "Ломанные равны." << std::endl;
+        }
+        else {
+            std::cout << "Ломанные разные после изменения." << std::endl;
+        }
+
+        // Создание новой ломаной с заданным количеством точек и диапазоном
+        Polyline<double> randomShape(5, 0.0, 10.0);
+        std::cout << "Длина случайной ломаной: " << randomShape.length() << std::endl;
+
+        // Использование конструктора копирования
+        Polyline<double> copiedShape = Iso_Triangle; // Копируем dShape
+        std::cout << "Длина скопированной ломаной: " << copiedShape.length() << std::endl;
+
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
