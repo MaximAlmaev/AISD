@@ -133,17 +133,6 @@ public:
 template<typename T>
 const double Polyline<T>::epsilon = 1e-5;
 
-// Функция для создания ломаной в виде буквы "Д"
-Polyline<double> createDShape() {
-    Polyline<double> dShape(6);
-    dShape[0] = Point<double>(0, 0);
-    dShape[1] = Point<double>(0, 3);
-    dShape[2] = Point<double>(2, 3);
-    dShape[3] = Point<double>(2, 1.5);
-    dShape[4] = Point<double>(0, 1.5);
-    dShape[5] = Point<double>(0, 0); // Замыкание ломаной
-    return dShape;
-}
 Polyline<double> createIsoscelesTriangle(double angle, double sideLength) {
     if (angle <= 0 || angle >= 180) {
         throw std::invalid_argument("Angle must be between 0 and PI");
@@ -170,7 +159,7 @@ int main() {
     setlocale(LC_ALL, "");
     try {
         // Создаем ломаную
-        Polyline<double> Iso_Triangle = createIsoscelesTriangle(40,3);
+        Polyline<double> Iso_Triangle = createIsoscelesTriangle(60.0,2.0);
         std::cout << "Длина ломанной: " << Iso_Triangle.length() << std::endl;
 
         // Пример использования операторов
